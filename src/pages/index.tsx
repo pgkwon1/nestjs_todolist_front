@@ -7,59 +7,44 @@ import {
 } from "@heroicons/react/20/solid";
 import TodoList from "@/components/TodoList";
 import api from "@/modules/ApiInstance";
+import { getTodoList } from "@/api";
 
 export default function Example() {
   const [todoList, setTodoList] = useState([]);
   useEffect(() => {
-    api.get("/todolist/").then((result) => {
-      setTodoList(result.data);
+    getTodoList().then((result) => {
+      setTodoList(result);
     });
   }, []);
   return (
     <div>
-      <div className="lg:flex lg:items-center lg:justify-between">
-        <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-            Back End Developer
-          </h2>
-          <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
-            <div className="mt-2 flex items-center text-sm text-gray-500">
-              <BriefcaseIcon
-                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
+      <div className="flex items-center justify-center h-screen">
+        <div className="w-1/2">
+          <h2 className="text-center text-3xl mb-4">Todo List</h2>
+          <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            <div className="mb-4">
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="new-task"
+                type="text"
+                placeholder="New Task"
               />
-              Full-time
             </div>
-            <div className="mt-2 flex items-center text-sm text-gray-500">
-              <MapPinIcon
-                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
-              Remote
-            </div>
-            <div className="mt-2 flex items-center text-sm text-gray-500">
-              <CurrencyDollarIcon
-                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
-              $120k &ndash; $140k
-            </div>
-            <div className="mt-2 flex items-center text-sm text-gray-500">
-              <CalendarIcon
-                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                aria-hidden="true"
-              />
-              Closing on January 9, 2020
+            <div className="flex items-center justify-between">
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+              >
+                Add Task
+              </button>
             </div>
           </div>
+          <ul className="list-none">
+            {todoList.map((todo, key) => {
+              return <TodoList key={key} todo={todo} />;
+            })}
+          </ul>
         </div>
-      </div>
-      <div className="w-75">
-        <ul role="list" className="divide-y divide-gray-100">
-          {todoList.map((todo, key) => {
-            return <TodoList key={key} todo={todo} />;
-          })}
-        </ul>
       </div>
     </div>
   );
