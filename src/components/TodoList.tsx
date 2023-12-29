@@ -1,3 +1,4 @@
+import { finishTodo } from "@/api";
 import { ITodoList } from "@/dto/todolist/TodoList";
 import moment from "moment";
 
@@ -53,9 +54,16 @@ export default function TodoList({ todo }: { todo: ITodoList }) {
         </span>
       </div>
       <div>
-        <button className="bg-blue-500 mt-4 hover:bg-blue-700 font-bold text-white py-2 px-4 rounded-md">
-          완료
-        </button>
+        {todo.isFinish ? (
+          ""
+        ) : (
+          <button
+            className="bg-blue-500 mt-4 hover:bg-blue-700 font-bold text-white py-2 px-4 rounded-md"
+            onClick={() => finishTodo(todo.id)}
+          >
+            완료
+          </button>
+        )}
       </div>
     </div>
   );

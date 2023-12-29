@@ -11,7 +11,16 @@ export const addTodoList = async (subject: string) => {
     subject,
     startedAt,
   });
-  console.log("response", result);
 
+  return result;
+};
+
+export const finishTodo = async (id: string) => {
+  const finishedAt = new Date();
+  const result = await api.patch(`/todolist/update/${id}`, {
+    id,
+    isFinish: true,
+    finishedAt,
+  });
   return result;
 };
