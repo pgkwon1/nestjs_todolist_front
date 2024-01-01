@@ -1,4 +1,4 @@
-import { apiDeleteTodo, apiEditTodo, finishTodo } from "@/api";
+import { apiDeleteTodo, apiEditTodo, apiFinishTodo } from "@/api";
 import { ITodoList } from "@/dto/todolist/TodoList";
 import moment from "moment";
 import { useCallback, useState } from "react";
@@ -151,7 +151,7 @@ export default function TodoList({
         ) : (
           <button
             className="bg-blue-500 mt-4 hover:bg-blue-700 font-bold text-white py-2 px-4 rounded-md"
-            onClick={() => finishTodo(todo.id)}
+            onClick={() => apiFinishTodo(todo.id)}
           >
             완료
           </button>

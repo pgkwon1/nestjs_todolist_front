@@ -16,7 +16,7 @@ export const apiAddTodoList = async (subject: string) => {
   return result;
 };
 
-export const finishTodo = async (id: string) => {
+export const apiFinishTodo = async (id: string) => {
   const finishedAt = new Date();
   const result = await api.patch(`/todolist/update/${id}`, {
     id,
