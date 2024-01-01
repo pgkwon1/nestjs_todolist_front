@@ -6,7 +6,7 @@ import {
   MapPinIcon,
 } from "@heroicons/react/20/solid";
 import TodoList from "@/components/TodoList";
-import { addTodoList, getTodoList } from "@/api";
+import { apiAddTodoList, getTodoList } from "@/api";
 import { ITodoList } from "@/dto/todolist/TodoList";
 
 export default function Example() {
@@ -20,6 +20,16 @@ export default function Example() {
 
   const deleteTodoList = (index: number) => {
     setTodoList((current) => current.filter((value, id) => id !== index));
+  };
+
+  const addTodoList = async () => {
+    const { data, message } = await apiAddTodoList(inputTodo);
+    if (message === "success") {
+      setTodoList((current: ITodoList[]) => [
+        { id: data, subject: inputTodo, isFinish: false },
+        ...current,
+      ]);
+    }
   };
   return (
     <div>
@@ -40,15 +50,7 @@ export default function Example() {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
-                onClick={async () => {
-                  const result = await addTodoList(inputTodo);
-                  if (result.message === "success") {
-                    setTodoList((current: ITodoList[]) => [
-                      { subject: inputTodo, isFinish: false },
-                      ...current,
-                    ]);
-                  }
-                }}
+                onClick={addTodoList}
               >
                 Add Task
               </button>
