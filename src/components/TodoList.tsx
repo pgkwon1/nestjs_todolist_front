@@ -29,14 +29,14 @@ export default function TodoList({
     setOpen(false);
   }, []);
 
-  const editTodo = useCallback(async () => {
+  const editTodo = async () => {
     const result = await apiEditTodo({ id: todo.id, subject: editInput });
 
     setEdit(false);
     if (result.message === "success") {
       todo.subject = editInput;
     }
-  }, []);
+  };
 
   const deleteTodo = useCallback(async () => {
     const result = await apiDeleteTodo(todo.id);
