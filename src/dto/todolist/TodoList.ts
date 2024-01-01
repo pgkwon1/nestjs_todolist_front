@@ -5,3 +5,7 @@ export interface ITodoList {
   startedAt?: Date;
   finishedAt?: Date;
 }
+
+export type ITodoListEdit = Partial<ITodoList> & {
+  id: string;
+};

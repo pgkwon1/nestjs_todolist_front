@@ -6,7 +6,6 @@ import {
   MapPinIcon,
 } from "@heroicons/react/20/solid";
 import TodoList from "@/components/TodoList";
-import api from "@/modules/ApiInstance";
 import { addTodoList, getTodoList } from "@/api";
 import { ITodoList } from "@/dto/todolist/TodoList";
 
@@ -18,6 +17,10 @@ export default function Example() {
       setTodoList(result.data);
     });
   }, []);
+
+  const deleteTodoList = (index: number) => {
+    setTodoList((current) => current.filter((value, id) => id !== index));
+  };
   return (
     <div>
       <div className="flex items-center justify-center">
@@ -53,7 +56,14 @@ export default function Example() {
           </div>
           <ul className="list-none">
             {todoList.map((todo, key) => {
-              return <TodoList key={key} todo={todo} />;
+              return (
+                <TodoList
+                  index={key}
+                  key={key}
+                  todo={todo}
+                  deleteTodoList={deleteTodoList}
+                />
+              );
             })}
           </ul>
         </div>

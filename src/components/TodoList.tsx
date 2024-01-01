@@ -1,16 +1,108 @@
-import { finishTodo } from "@/api";
+import { apiDeleteTodo, apiEditTodo, finishTodo } from "@/api";
 import { ITodoList } from "@/dto/todolist/TodoList";
 import moment from "moment";
+import { useCallback, useState } from "react";
 
-export default function TodoList({ todo }: { todo: ITodoList }) {
+export default function TodoList({
+  index,
+  todo,
+  deleteTodoList,
+}: {
+  index: number;
+  todo: ITodoList;
+  deleteTodoList: (id: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [editInput, setEditInput] = useState(todo.subject);
   const startedAt = moment(todo.startedAt).format("YYYY-MM-DD일 HH:mm분");
   const finishedAt = todo.isFinish
     ? moment(todo.finishedAt).format("YYYY-MM-DD일 HH:mm분")
     : "";
 
+  const openPopup = () => {
+    setOpen((current) => !current);
+  };
+
+  const openEdit = useCallback(() => {
+    setEdit((current) => !current);
+    setOpen(false);
+  }, []);
+
+  const editTodo = useCallback(async () => {
+    const result = await apiEditTodo({ id: todo.id, subject: editInput });
+
+    setEdit(false);
+    if (result.message === "success") {
+      todo.subject = editInput;
+    }
+  }, []);
+
+  const deleteTodo = useCallback(async () => {
+    const result = await apiDeleteTodo(todo.id);
+    if (result.message === "success") {
+      deleteTodoList(index);
+    }
+  }, []);
+
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mt-4 mb-4">
-      <h2 className="text-xl font-bold mb-2">{todo.subject}</h2>
+    <div className="bg-white p-4 rounded-lg shadow-md mt-4 mb-4 relative">
+      <div className="absolute top-0 right-4">
+        <button
+          className="text-gray-500 focus:outline-none"
+          onClick={openPopup}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        className={`absolute ${
+          open === false ? "hidden" : ""
+        } right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md`}
+      >
+        <button
+          className="block px-4 py-2 hover:bg-gray-100"
+          onClick={openEdit}
+        >
+          수정
+        </button>
+        <button
+          className="block px-4 py-2 hover:bg-gray-100"
+          onClick={deleteTodo}
+        >
+          삭제
+        </button>
+      </div>
+      {edit ? (
+        <>
+          <input
+            className="shadow appearance-none border rounded w-80 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={editInput}
+            onChange={(e) => setEditInput(e.target.value)}
+          />
+          <button
+            className="bg-gray-500 ml-4 mt-4 hover:bg-blue-700 font-bold text-white py-2 px-2 rounded-md"
+            onClick={editTodo}
+          >
+            완료
+          </button>
+        </>
+      ) : (
+        <h2 className="text-xl font-bold mb-2">{todo.subject}</h2>
+      )}
       <div className="flex items-center mb-2">
         {todo.isFinish ? (
           <svg
