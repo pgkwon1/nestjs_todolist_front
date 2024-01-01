@@ -6,7 +6,7 @@ export const getTodoList = async () => {
   return result;
 };
 
-export const addTodoList = async (subject: string) => {
+export const apiAddTodoList = async (subject: string) => {
   const startedAt = new Date();
   const result = await api.post("/todolist/add", {
     subject,
