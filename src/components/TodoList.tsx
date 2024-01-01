@@ -38,12 +38,12 @@ export default function TodoList({
     }
   };
 
-  const deleteTodo = useCallback(async () => {
+  const deleteTodo = async () => {
     const result = await apiDeleteTodo(todo.id);
     if (result.message === "success") {
       deleteTodoList(index);
     }
-  }, []);
+  };
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md mt-4 mb-4 relative">
