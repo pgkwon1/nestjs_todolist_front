@@ -64,6 +64,7 @@ export default function Example() {
                   key={key}
                   todo={todo}
                   deleteTodoList={deleteTodoList}
+                  setTodoList={setTodoList}
                 />
               );
             })}

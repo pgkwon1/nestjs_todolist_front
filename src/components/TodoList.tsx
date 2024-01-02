@@ -7,10 +7,12 @@ export default function TodoList({
   index,
   todo,
   deleteTodoList,
+  setTodoList,
 }: {
   index: number;
   todo: ITodoList;
   deleteTodoList: (id: number) => void;
+  setTodoList: (current: ITodoList[]) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -42,6 +44,22 @@ export default function TodoList({
     const result = await apiDeleteTodo(todo.id);
     if (result.message === "success") {
       deleteTodoList(index);
+    }
+  };
+
+  const finishTodo = async () => {
+    const result = await apiFinishTodo(todo.id);
+    if (result.message === "success") {
+      setTodoList((current: ITodoList[]) => {
+        return current.map((data: ITodoList) => {
+          return {
+            ...data,
+            ...(data.id === todo.id
+              ? { isFinish: true, finishedAt: result.data as Date }
+              : {}),
+          };
+        });
+      });
     }
   };
 
@@ -151,7 +169,7 @@ export default function TodoList({
         ) : (
           <button
             className="bg-blue-500 mt-4 hover:bg-blue-700 font-bold text-white py-2 px-4 rounded-md"
-            onClick={() => apiFinishTodo(todo.id)}
+            onClick={() => finishTodo()}
           >
             완료
           </button>

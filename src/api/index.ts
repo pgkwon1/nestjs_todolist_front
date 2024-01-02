@@ -23,6 +23,7 @@ export const apiFinishTodo = async (id: string) => {
     isFinish: true,
     finishedAt,
   });
+  result.data = finishedAt;
   return result;
 };
 
