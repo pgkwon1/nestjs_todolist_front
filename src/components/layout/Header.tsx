@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
   return (
-    <header className="flex items-center justify-between py-4 px-8">
+    <header className="flex items-center justify-between py-4 px-8 text-white font-normal">
       <div className="flex items-center space-x-4">
         <div className="text-lg font-bold">TODO</div>
       </div>
