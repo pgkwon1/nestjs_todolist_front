@@ -6,10 +6,17 @@ export const getTodoList = async () => {
   return result;
 };
 
-export const apiAddTodoList = async (subject: string) => {
+export const apiAddTodoList = async ({
+  subject,
+  category,
+}: {
+  subject: string;
+  category: string;
+}) => {
   const startedAt = new Date();
   const result = await api.post("/todolist/add", {
     subject,
+    category,
     startedAt,
   });
 

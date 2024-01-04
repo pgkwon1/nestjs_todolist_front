@@ -63,46 +63,77 @@ export default function TodoList({
     }
   };
 
+  const getDecorationColor = useCallback((value: string) => {
+    switch (value) {
+      case "업무":
+        return "decoration-pink-600";
+      case "개인":
+        return "decoration-fuchsia-600";
+      case "가족":
+        return "decoration-purple-600";
+      case "공부":
+        return "decoration-violet-600";
+      case "여행":
+        return "decoration-indigo-600";
+      case "건강":
+        return "decoration-blue-600";
+      case "친구":
+        return "decoration-sky-600";
+      case "취미":
+        return "decoration-cyan-600";
+      case "자기 개발":
+        return "decoration-teal-600";
+    }
+  }, []);
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mt-4 mb-4 relative">
-      <div className="absolute top-0 right-4">
-        <button
-          className="text-gray-500 focus:outline-none"
-          onClick={openPopup}
+    <div className="bg-white p-4 rounded-lg shadow-md mt-8 mb-8 shadow-2xl">
+      <div className="mt-4 mb-4 font-normal relative">
+        <span
+          className={`font-black underline underline-offset-4 ${getDecorationColor(
+            todo.category
+          )}`}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
+          {todo.category}
+        </span>
+        <div className="absolute top-0 right-4">
+          <button
+            className="text-gray-500 focus:outline-none"
+            onClick={openPopup}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-            />
-          </svg>
-        </button>
-      </div>
-      <div
-        className={`absolute ${
-          open === false ? "hidden" : ""
-        } right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md`}
-      >
-        <button
-          className="block px-4 py-2 hover:bg-gray-100"
-          onClick={openEdit}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          className={`absolute ${
+            open === false ? "hidden" : ""
+          } right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-md`}
         >
-          수정
-        </button>
-        <button
-          className="block px-4 py-2 hover:bg-gray-100"
-          onClick={deleteTodo}
-        >
-          삭제
-        </button>
+          <button
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={openEdit}
+          >
+            수정
+          </button>
+          <button
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={deleteTodo}
+          >
+            삭제
+          </button>
+        </div>
       </div>
       {edit ? (
         <>
