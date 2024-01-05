@@ -1,5 +1,6 @@
 import { apiDeleteTodo, apiEditTodo, apiFinishTodo } from "@/api";
 import { ITodoList } from "@/dto/todolist/TodoList";
+import { Switch } from "@headlessui/react";
 import moment from "moment";
 import { useCallback, useState } from "react";
 
@@ -48,14 +49,15 @@ export default function TodoList({
   };
 
   const finishTodo = async () => {
-    const result = await apiFinishTodo(todo.id);
+    const isFinish = !todo.isFinish;
+    const result = await apiFinishTodo(todo.id, isFinish);
     if (result.message === "success") {
       setTodoList((current: ITodoList[]) => {
         return current.map((data: ITodoList) => {
           return {
             ...data,
             ...(data.id === todo.id
-              ? { isFinish: true, finishedAt: result.data as Date }
+              ? { isFinish, finishedAt: result.data as Date }
               : {}),
           };
         });
@@ -196,16 +198,19 @@ export default function TodoList({
         </span>
       </div>
       <div>
-        {todo.isFinish ? (
-          ""
-        ) : (
-          <button
-            className="bg-blue-500 mt-4 hover:bg-blue-700 font-bold text-white py-2 px-4 rounded-md"
-            onClick={() => finishTodo()}
-          >
-            완료
-          </button>
-        )}
+        <Switch
+          checked={todo.isFinish}
+          onChange={finishTodo}
+          className={`mt-4 ${
+            todo.isFinish ? "bg-blue-600" : "bg-gray-200"
+          } relative inline-flex h-6 w-11 items-center rounded-full`}
+        >
+          <span
+            className={`${
+              todo.isFinish ? "translate-x-6" : "translate-x-1"
+            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+          />
+        </Switch>
       </div>
     </div>
   );
