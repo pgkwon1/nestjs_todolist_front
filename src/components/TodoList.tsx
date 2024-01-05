@@ -63,38 +63,39 @@ export default function TodoList({
     }
   };
 
-  const getDecorationColor = useCallback((value: string) => {
+  const getCategoryColor = useCallback((value: string) => {
     switch (value) {
       case "업무":
-        return "decoration-pink-600";
+        return "bg-yellow-50 text-yellow-700 ring-yellow-700/10";
       case "개인":
-        return "decoration-fuchsia-600";
+        return "bg-blue-50 text-blue-700 ring-blue-700/10";
       case "가족":
-        return "decoration-purple-600";
+        return "bg-indigo-50 text-indigo-700 ring-indigo-700/10";
       case "공부":
-        return "decoration-violet-600";
+        return "bg-red-50 text-red-700 ring-red-700/10";
       case "여행":
-        return "decoration-indigo-600";
+        return "bg-green-50 text-green-700 ring-green-700/10";
       case "건강":
-        return "decoration-blue-600";
+        return "bg-purple-50 text-purple-700 ring-purple-700/10";
       case "친구":
-        return "decoration-sky-600";
+        return "bg-pink-50 text-pink-700 ring-pink-700/10 ";
       case "취미":
-        return "decoration-cyan-600";
+        return "bg-green-50 text-green-700 ring-green-700/10";
       case "자기 개발":
-        return "decoration-teal-600";
+        return "bg-gray-50 text-gray-700 ring-gray-700/10";
     }
   }, []);
   return (
     <div className="bg-white p-4 rounded-lg shadow-md mt-8 mb-8 shadow-2xl">
       <div className="mt-4 mb-4 font-normal relative">
         <span
-          className={`font-black underline underline-offset-4 ${getDecorationColor(
+          className={`${getCategoryColor(
             todo.category
-          )}`}
+          )} inline-flex items-center rounded-md px-6 py-2 text-xs font-medium`}
         >
           {todo.category}
         </span>
+
         <div className="absolute top-0 right-4">
           <button
             className="text-gray-500 focus:outline-none"
