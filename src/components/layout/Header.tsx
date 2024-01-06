@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const Header = () => {
@@ -18,7 +19,9 @@ const Header = () => {
         </a>
       </nav>
       <div>
-        <button className="text-lg">로그인</button>
+        <Link href={"/login"}>
+          <button className="text-lg">로그인</button>
+        </Link>
       </div>
     </header>
   );
