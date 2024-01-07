@@ -9,7 +9,8 @@ export const apiLogin = async ({ userId, password }) => {
   if (result.data && result.message === "success") {
     const token = result.data;
     Cookies.set("tokens", token, { expires: 1 });
-  } else {
-    return false;
+    return true;
   }
+
+  return false;
 };

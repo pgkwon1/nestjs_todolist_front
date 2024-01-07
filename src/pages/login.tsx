@@ -1,7 +1,12 @@
 import { apiLogin } from "@/api/login";
+import { setLoginState } from "@/store/reducers/member.reducer";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function Login() {
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [loginData, setLoginData] = useState({
     userId: "",
     password: "",
@@ -19,6 +24,16 @@ export default function Login() {
   const login = async () => {
     const { userId, password } = loginData;
     const result = await apiLogin({ userId, password });
+
+    if (result) {
+      dispatch(
+        setLoginState({
+          isLogin: true,
+          userId: loginData.userId,
+        })
+      );
+      router.push("/");
+    }
   };
   return (
     <>

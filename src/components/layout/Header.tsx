@@ -1,7 +1,10 @@
 import Link from "next/link";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const Header = () => {
+  const { isLogin, userId } = useSelector((state) => state.memberReducer);
+
   return (
     <header className="flex items-center justify-between py-4 px-8 text-white font-normal">
       <div className="flex items-center space-x-4">
@@ -19,9 +22,18 @@ const Header = () => {
         </a>
       </nav>
       <div>
-        <Link href={"/login"}>
-          <button className="text-lg">로그인</button>
-        </Link>
+        {isLogin ? (
+          <>
+            <span className="font-lg mr-4">{userId} 님 환영합니다!</span>
+            <Link href={"/logout"}>
+              <button className="text-lg">로그아웃</button>
+            </Link>
+          </>
+        ) : (
+          <Link href={"/login"}>
+            <button className="text-lg">로그인</button>
+          </Link>
+        )}
       </div>
     </header>
   );
