@@ -2,6 +2,7 @@ import { apiLogin } from "@/api/login";
 import { setLoginState } from "@/store/reducers/member.reducer";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 
 export default function Login() {
@@ -11,7 +12,27 @@ export default function Login() {
     userId: "",
     password: "",
   });
-
+  const loginMutation = useMutation(
+    "login",
+    async () =>
+      await apiLogin({
+        userId: loginData.userId,
+        password: loginData.password,
+      }),
+    {
+      onSuccess: (result) => {
+        if (result) {
+          dispatch(
+            setLoginState({
+              isLogin: true,
+              userId: loginData.userId,
+            })
+          );
+          router.push("/");
+        }
+      },
+    }
+  );
   const setLoginInfo = (attr, data) => {
     setLoginData((current) => {
       return {
@@ -21,20 +42,6 @@ export default function Login() {
     });
   };
 
-  const login = async () => {
-    const { userId, password } = loginData;
-    const result = await apiLogin({ userId, password });
-
-    if (result) {
-      dispatch(
-        setLoginState({
-          isLogin: true,
-          userId: loginData.userId,
-        })
-      );
-      router.push("/");
-    }
-  };
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -93,7 +100,7 @@ export default function Login() {
             <button
               type="button"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={login}
+              onClick={async () => await loginMutation.mutate()}
             >
               로그인
             </button>

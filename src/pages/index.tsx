@@ -3,6 +3,7 @@ import TodoList from "@/components/TodoList";
 import { apiAddTodoList, getTodoList } from "@/api";
 import { ITodoInput, ITodoList } from "@/dto/todolist/TodoList";
 import { Listbox } from "@headlessui/react";
+import { useMutation, useQuery } from "react-query";
 
 export default function Example() {
   const categoryList = [
@@ -21,30 +22,47 @@ export default function Example() {
     subject: "",
     category: "업무",
   });
-  useEffect(() => {
-    getTodoList().then((result) => {
-      setTodoList(result.data);
-    });
-  }, []);
+
+  const { data, isSuccess } = useQuery(
+    "getTodoList",
+    async () => await getTodoList(),
+    {
+      staleTime: 120000,
+      cacheTime: 120000,
+
+      onSuccess: (data) => {
+        if (data && data.data.length > 0) {
+          setTodoList(data.data);
+        }
+      },
+    }
+  );
+
+  const addMutation = useMutation(
+    "addTodoList",
+    async () => await apiAddTodoList(inputTodo),
+    {
+      onSuccess: (result) => {
+        const { data, message } = result;
+        if (message === "success") {
+          setTodoList((current: ITodoList[]) => [
+            {
+              id: data,
+              subject: inputTodo.subject,
+              isFinish: false,
+              category: inputTodo.category,
+            },
+            ...current,
+          ]);
+        }
+      },
+    }
+  );
 
   const deleteTodoList = (index: number) => {
     setTodoList((current) => current.filter((value, id) => id !== index));
   };
 
-  const addTodoList = async () => {
-    const { data, message } = await apiAddTodoList(inputTodo);
-    if (message === "success") {
-      setTodoList((current: ITodoList[]) => [
-        {
-          id: data,
-          subject: inputTodo.subject,
-          isFinish: false,
-          category: inputTodo.category,
-        },
-        ...current,
-      ]);
-    }
-  };
   const changeInputTodo = (data: string, attr: "category" | "subject") => {
     setInputTodo((current: ITodoInput) => {
       return {
@@ -113,7 +131,7 @@ export default function Example() {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
-                onClick={addTodoList}
+                onClick={async () => await addMutation.mutate()}
               >
                 Add Task
               </button>

@@ -3,6 +3,7 @@ import { ITodoList } from "@/dto/todolist/TodoList";
 import { Switch } from "@headlessui/react";
 import moment from "moment";
 import { useCallback, useState } from "react";
+import { useMutation } from "react-query";
 
 export default function TodoList({
   index,
@@ -23,6 +24,52 @@ export default function TodoList({
     ? moment(todo.finishedAt).format("YYYY-MM-DD일 HH:mm분")
     : "";
 
+  const editMutation = useMutation(
+    ["editTodo", todo.id],
+    async () => await apiEditTodo({ id: todo.id, subject: editInput }),
+    {
+      onSuccess: (result) => {
+        setEdit(false);
+        if (result.message === "success") {
+          todo.subject = editInput;
+        }
+      },
+    }
+  );
+
+  const finishMutation = useMutation(
+    ["finishTodo", todo.id],
+    async () => await apiFinishTodo(todo.id, !todo.isFinish),
+    {
+      onSuccess: (result) => {
+        if (result.message === "success") {
+          const isFinish = !todo.isFinish;
+          setTodoList((current: ITodoList[]) => {
+            return current.map((data: ITodoList) => {
+              return {
+                ...data,
+                ...(data.id === todo.id
+                  ? { isFinish, finishedAt: result.data as Date }
+                  : {}),
+              };
+            });
+          });
+        }
+      },
+    }
+  );
+  const deleteMutation = useMutation(
+    "deleteTodoList",
+    async () => await apiDeleteTodo(todo.id),
+    {
+      onSuccess: (result) => {
+        if (result.message === "success") {
+          deleteTodoList(index);
+        }
+      },
+    }
+  );
+
   const openPopup = () => {
     setOpen((current) => !current);
   };
@@ -31,39 +78,6 @@ export default function TodoList({
     setEdit((current) => !current);
     setOpen(false);
   }, []);
-
-  const editTodo = async () => {
-    const result = await apiEditTodo({ id: todo.id, subject: editInput });
-
-    setEdit(false);
-    if (result.message === "success") {
-      todo.subject = editInput;
-    }
-  };
-
-  const deleteTodo = async () => {
-    const result = await apiDeleteTodo(todo.id);
-    if (result.message === "success") {
-      deleteTodoList(index);
-    }
-  };
-
-  const finishTodo = async () => {
-    const isFinish = !todo.isFinish;
-    const result = await apiFinishTodo(todo.id, isFinish);
-    if (result.message === "success") {
-      setTodoList((current: ITodoList[]) => {
-        return current.map((data: ITodoList) => {
-          return {
-            ...data,
-            ...(data.id === todo.id
-              ? { isFinish, finishedAt: result.data as Date }
-              : {}),
-          };
-        });
-      });
-    }
-  };
 
   const getCategoryColor = useCallback((value: string) => {
     switch (value) {
@@ -132,7 +146,7 @@ export default function TodoList({
           </button>
           <button
             className="block px-4 py-2 hover:bg-gray-100"
-            onClick={deleteTodo}
+            onClick={async () => await deleteMutation.mutate()}
           >
             삭제
           </button>
@@ -147,7 +161,7 @@ export default function TodoList({
           />
           <button
             className="bg-gray-500 ml-4 mt-4 hover:bg-blue-700 font-bold text-white py-2 px-2 rounded-md"
-            onClick={editTodo}
+            onClick={async () => await editMutation.mutate()}
           >
             완료
           </button>
@@ -200,7 +214,7 @@ export default function TodoList({
       <div>
         <Switch
           checked={todo.isFinish}
-          onChange={finishTodo}
+          onChange={async () => await finishMutation.mutate()}
           className={`mt-4 ${
             todo.isFinish ? "bg-blue-600" : "bg-gray-200"
           } relative inline-flex h-6 w-11 items-center rounded-full`}
