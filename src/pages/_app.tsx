@@ -10,7 +10,14 @@ import { PersistGate } from "redux-persist/integration/react";
 
 export default function App({ Component, pageProps }: AppProps) {
   const persistor = persistStore(store);
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1000 * 120,
+        cacheTime: 1000 * 120,
+      },
+    },
+  });
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
