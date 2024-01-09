@@ -1,23 +1,21 @@
-import { ITodoListEdit } from "@/dto/todolist/TodoList";
+import { ITodoInput, ITodoListEdit } from "@/dto/todolist/TodoList";
 import api from "@/modules/ApiInstance";
 
-export const getTodoList = async () => {
-  const result = await api.get("/todolist/");
+export const getTodoList = async (date: string) => {
+  const result = await api.get(`/todolist/${date}`);
   return result;
 };
 
 export const apiAddTodoList = async ({
   subject,
   category,
-}: {
-  subject: string;
-  category: string;
-}) => {
-  const startedAt = new Date();
+  startedAt,
+}: ITodoInput) => {
+  console.log(startedAt);
   const result = await api.post("/todolist/add", {
     subject,
     category,
-    startedAt,
+    startedAt: new Date(startedAt),
   });
 
   return result;

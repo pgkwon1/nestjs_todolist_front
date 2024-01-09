@@ -10,6 +10,7 @@ export interface ITodoList {
 export interface ITodoInput {
   subject: string;
   category: string;
+  startedAt: string;
 }
 
 export type ITodoListEdit = Partial<ITodoList> & {
