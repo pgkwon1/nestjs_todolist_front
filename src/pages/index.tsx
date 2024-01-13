@@ -51,7 +51,7 @@ export default function Example() {
     "addTodoList",
     async () => {
       inputTodo.startedAt = date;
-      await apiAddTodoList(inputTodo);
+      return await apiAddTodoList(inputTodo);
     },
     {
       onSuccess: (result) => {
