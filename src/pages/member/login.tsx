@@ -1,4 +1,4 @@
-import { apiLogin } from "@/api/login";
+import { apiLogin } from "@/api/member/login";
 import { setLoginState } from "@/store/reducers/member.reducer";
 import { useRouter } from "next/router";
 import { useState } from "react";
