@@ -26,12 +26,13 @@ export default function App({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const isCheck = sessionStorage.getItem("check");
     //토큰 만료여부 최초 접속 1회만 체크
-    if (isCheck === "1") {
-      axios.get("/check").catch((err: AxiosError) => {
+    if (isCheck !== "1" || !isCheck) {
+      axios.get("/api/check").catch((err: AxiosError) => {
         if (err.response?.status === 401) {
           sessionStorage.setItem("check", "1");
           //호출 위치가 redux provider 이전이라 redux를 사용할 수 없어 따로 페이지 이동.
           router.push("/member/logout");
+          return false;
         }
       });
     }
