@@ -6,7 +6,7 @@ import axios, { AxiosError } from "axios";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
@@ -21,6 +21,14 @@ export default function App({ Component, pageProps }: AppProps) {
         cacheTime: 1000 * 120,
       },
     },
+
+    queryCache: new QueryCache({
+      onError: (error) => {
+        if (error instanceof AxiosError && error.response?.status === 401) {
+          router.push("/member/logout");
+        }
+      },
+    }),
   });
 
   useEffect(() => {
