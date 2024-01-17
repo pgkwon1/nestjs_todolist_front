@@ -11,7 +11,6 @@ export const apiAddTodoList = async ({
   category,
   startedAt,
 }: ITodoInput) => {
-  console.log(startedAt);
   const result = await api.post("/todolist/add", {
     subject,
     category,
