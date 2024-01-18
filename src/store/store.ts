@@ -3,9 +3,11 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import memberReducer from "./reducers/member.reducer";
 import { configureStore } from "@reduxjs/toolkit";
+import alertReducer from "./reducers/alert.reducer";
 
 const rootReducer = combineReducers({
   memberReducer,
+  alertReducer,
 });
 const persistConfig = {
   key:
@@ -13,7 +15,7 @@ const persistConfig = {
       ? process.env.NEXT_PUBLIC_PERSIST_KEY
       : "",
   storage: storage,
-  whiteList: ["memberReducer"],
+  whiteList: ["memberReducer", "alertReducer"],
 };
 
 const rootPersistReducer = persistReducer(persistConfig, rootReducer);

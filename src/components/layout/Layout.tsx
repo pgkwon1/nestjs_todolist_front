@@ -1,11 +1,15 @@
 import React from "react";
 import Header from "./Header";
+import Footer from "./Footer";
 
 const Layout = ({ children }) => {
   return (
-    <div>
+    <div className="flex flex-col">
       <Header />
-      {children}
+      <div className="min-h-screen">{children}</div>
+      <footer className="flex justify-items-center flex-col contents-center p-10">
+        <Footer />
+      </footer>
     </div>
   );
 };
