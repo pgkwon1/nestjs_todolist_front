@@ -15,18 +15,15 @@ import { PersistGate } from "redux-persist/integration/react";
 export default function App({ Component, pageProps }: AppProps) {
   const persistor = persistStore(store);
   const router = useRouter();
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 1000 * 120,
         cacheTime: 1000 * 120,
-        onSuccess: () => {},
       },
     },
 
     queryCache: new QueryCache({
-      onSuccess: () => {},
       onError: (error) => {
         if (error instanceof AxiosError && error.response?.status === 401) {
           router.push("/member/logout");
